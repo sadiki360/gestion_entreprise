@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Supprimer Vente{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-danger text-white fw-bold">
+                <i class="bi bi-exclamation-triangle"></i> Confirmer la suppression
+            </div>
+            <div class="card-body text-center py-4">
+                <p class="fs-5">Supprimer <strong>Vente #{{ vente.id }}</strong> ?</p>
+                <p class="text-muted">Cette action est irréversible.</p>
+                <form method="post" class="d-flex gap-2 justify-content-center">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Confirmer
+                    </button>
+                    <a href="{% url 'vente_list' %}" class="btn btn-outline-secondary">Annuler</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

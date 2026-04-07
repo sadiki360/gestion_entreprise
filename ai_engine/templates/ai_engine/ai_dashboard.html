@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block title %}AI Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="fw-bold mb-4"><i class="bi bi-robot"></i> Analyse Intelligente</h2>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-center p-3">
+            <div class="text-muted small">Chiffre d'affaires total</div>
+            <div class="fs-3 fw-bold text-primary">{{ analyse.total_ca }} DH</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-center p-3">
+            <div class="text-muted small">Moyenne journalière</div>
+            <div class="fs-3 fw-bold text-success">{{ analyse.moyenne_journaliere }} DH</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-center p-3">
+            <div class="text-muted small">Tendance</div>
+            <div class="fs-3 fw-bold
+                {% if analyse.tendance == 'En hausse' %}text-success
+                {% elif analyse.tendance == 'En baisse' %}text-danger
+                {% else %}text-warning{% endif %}">
+                {{ analyse.tendance }}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-center p-3">
+            <div class="text-muted small">Évolution</div>
+            <div class="fs-3 fw-bold
+                {% if analyse.evolution > 0 %}text-success
+                {% elif analyse.evolution < 0 %}text-danger
+                {% else %}text-warning{% endif %}">
+                {% if analyse.evolution > 0 %}+{% endif %}{{ analyse.evolution }}%
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white fw-bold">
+                <i class="bi bi-crystal-ball text-purple"></i> Prédiction semaine prochaine
+            </div>
+            <div class="card-body text-center py-4">
+                <div class="fs-1 fw-bold text-primary">{{ prediction.prediction }} DH</div>
+                <div class="mt-2">
+                    <span class="badge
+                        {% if prediction.fiabilite == 'Bonne' %}bg-success
+                        {% elif prediction.fiabilite == 'Moyenne' %}bg-warning
+                        {% else %}bg-secondary{% endif %}">
+                        Fiabilité : {{ prediction.fiabilite }}
+                    </span>
+                </div>
+                <p class="text-muted mt-2 small">{{ prediction.message }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white fw-bold">
+                <i class="bi bi-lightbulb text-warning"></i> Recommandations Ventes
+            </div>
+            <div class="card-body">
+                {% for reco in reco_ventes %}
+                <div class="alert alert-{{ reco.type }} d-flex align-items-center gap-2 py-2">
+                    <i class="bi {{ reco.icone }}"></i>
+                    <span>{{ reco.message }}</span>
+                </div>
+                {% empty %}
+                <p class="text-muted text-center">Aucune recommandation pour le moment.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white fw-bold">
+        <i class="bi bi-box-seam text-danger"></i> Recommandations Stock
+    </div>
+    <div class="card-body">
+        {% for reco in reco_stock %}
+        <div class="alert alert-{{ reco.type }} d-flex align-items-center gap-2 py-2">
+            <i class="bi {{ reco.icone }}"></i>
+            <div>
+                <strong>{{ reco.produit }}</strong> — {{ reco.message }}
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-success text-center">
+            <i class="bi bi-check-circle"></i> Tout le stock est en bon état.
+        </p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

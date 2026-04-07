@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4 fw-bold">Dashboard</h2>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-white bg-primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="mb-1 opacity-75">Clients</p>
+                        <h3 class="fw-bold">{{ total_clients }}</h3>
+                    </div>
+                    <i class="bi bi-people fs-1 opacity-50"></i>
+                </div>
+                <a href="{% url 'client_list' %}" class="text-white-50 small">Voir tous →</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-white bg-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="mb-1 opacity-75">Produits</p>
+                        <h3 class="fw-bold">{{ total_produits }}</h3>
+                    </div>
+                    <i class="bi bi-box-seam fs-1 opacity-50"></i>
+                </div>
+                <a href="{% url 'produit_list' %}" class="text-white-50 small">Voir stock →</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-white bg-warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="mb-1 opacity-75">Ventes</p>
+                        <h3 class="fw-bold">{{ total_ventes }}</h3>
+                    </div>
+                    <i class="bi bi-cart3 fs-1 opacity-50"></i>
+                </div>
+                <a href="{% url 'vente_list' %}" class="text-white-50 small">Voir ventes →</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm text-white bg-danger">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p class="mb-1 opacity-75">Chiffre d'affaires</p>
+                        <h3 class="fw-bold">{{ chiffre_affaires }} DH</h3>
+                    </div>
+                    <i class="bi bi-cash-stack fs-1 opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white fw-bold">Ventes des 7 derniers jours</div>
+            <div class="card-body">
+                <canvas id="ventesChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white fw-bold text-danger">
+                <i class="bi bi-exclamation-triangle"></i> Stock bas
+            </div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush">
+                    {% for p in produits_alerte %}
+                    <li class="list-group-item d-flex justify-content-between">
+                        {{ p.nom }}
+                        <span class="badge bg-danger">{{ p.quantite }}</span>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item text-success">Tout est OK</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-white fw-bold">Ventes récentes</div>
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Client</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for vente in ventes_recentes %}
+                <tr>
+                    <td>{{ vente.id }}</td>
+                    <td>{{ vente.client }}</td>
+                    <td>{{ vente.date_vente|date:"d/m/Y" }}</td>
+                    <td>{{ vente.total }} DH</td>
+                    <td><a href="{% url 'vente_detail' vente.pk %}" class="btn btn-sm btn-outline-primary">Voir</a></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">Aucune vente</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const ctx = document.getElementById('ventesChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: {{ last_7_labels| safe }},
+        datasets: [{
+            label: 'Ventes (DH)',
+            data: {{ last_7_days| safe }},
+        backgroundColor: 'rgba(13, 110, 253, 0.7)',
+        borderRadius: 6,
+        }]
+    },
+        options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+    }
+});
+</script>
+{% endblock %}

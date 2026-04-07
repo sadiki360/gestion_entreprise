@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}{% if form.instance.pk %}Modifier{% else %}Ajouter{% endif %} Produit{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white fw-bold">
+                <i class="bi bi-box-seam"></i>
+                {% if form.instance.pk %}Modifier{% else %}Ajouter{% endif %} un produit
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">{{ field.label }}</label>
+                        <input type="{{ field.field.widget.input_type }}" name="{{ field.html_name }}"
+                            value="{{ field.value|default:'' }}"
+                            class="form-control {% if field.errors %}is-invalid{% endif %}">
+                        {% for error in field.errors %}
+                        <div class="invalid-feedback">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-lg"></i> Enregistrer
+                        </button>
+                        <a href="{% url 'produit_list' %}" class="btn btn-outline-secondary">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

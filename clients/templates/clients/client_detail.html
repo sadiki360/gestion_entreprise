@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}{{ client.nom }} {{ client.prenom }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <span class="fw-bold"><i class="bi bi-person"></i> {{ client.nom }} {{ client.prenom }}</span>
+                <a href="{% url 'client_list' %}" class="btn btn-sm btn-outline-secondary">Retour</a>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <td class="text-muted">Email</td>
+                        <td>{{ client.email }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Téléphone</td>
+                        <td>{{ client.telephone }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Adresse</td>
+                        <td>{{ client.adresse }}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-muted">Date création</td>
+                        <td>{{ client.date_creation|date:"d/m/Y" }}</td>
+                    </tr>
+                </table>
+                <div class="d-flex gap-2 mt-3">
+                    <a href="{% url 'client_update' client.pk %}" class="btn btn-warning">
+                        <i class="bi bi-pencil"></i> Modifier
+                    </a>
+                    <a href="{% url 'client_delete' client.pk %}" class="btn btn-danger">
+                        <i class="bi bi-trash"></i> Supprimer
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
