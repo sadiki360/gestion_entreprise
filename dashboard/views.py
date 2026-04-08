@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from clients.models import Client
 from stock.models import Produit
 from ventes.models import Vente
@@ -6,6 +7,7 @@ from django.db.models import Sum
 from django.utils import timezone
 from datetime import timedelta
 
+@login_required
 def dashboard(request):
     total_clients = Client.objects.count()
     total_produits = Produit.objects.count()
