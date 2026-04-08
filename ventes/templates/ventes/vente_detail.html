@@ -64,7 +64,10 @@
     </div>
 </div>
 
-<div class="mt-3">
+<div class="mt-3 d-flex gap-2">
+    <a href="{% url 'facture_pdf' vente.pk %}" class="btn btn-danger">
+        <i class="bi bi-file-pdf"></i> Télécharger Facture
+    </a>
     <a href="{% url 'vente_delete' vente.pk %}" class="btn btn-danger">
         <i class="bi bi-trash"></i> Supprimer cette vente
     </a>

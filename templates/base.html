@@ -16,12 +16,20 @@
             <a class="navbar-brand fw-bold" href="{% url 'dashboard' %}">
                 <i class="bi bi-graph-up-arrow"></i> Gestion Entreprise
             </a>
-            <div class="navbar-nav ms-auto">
+            <div class="navbar-nav ms-auto d-flex align-items-center gap-2">
                 <a class="nav-link" href="{% url 'client_list' %}"><i class="bi bi-people"></i> Clients</a>
                 <a class="nav-link" href="{% url 'produit_list' %}"><i class="bi bi-box-seam"></i> Stock</a>
                 <a class="nav-link" href="{% url 'vente_list' %}"><i class="bi bi-cart3"></i> Ventes</a>
                 <a class="nav-link" href="{% url 'ai_dashboard' %}"><i class="bi bi-robot"></i> AI</a>
-
+                {% if user.is_authenticated %}
+                <span class="text-white-50 small"><i class="bi bi-person-circle"></i> {{ user.username }}</span>
+                <form method="post" action="{% url 'logout' %}" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-light">
+                        <i class="bi bi-box-arrow-right"></i> Déconnexion
+                    </button>
+                </form>
+                {% endif %}
             </div>
         </div>
     </nav>
